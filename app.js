@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
 
 const app = express();
@@ -8,6 +9,7 @@ const app = express();
 // middleware
 app.use(morgan('dev'));
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.static('public'));
 
 // view engine

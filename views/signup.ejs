@@ -31,6 +31,7 @@
                     placeholder="Enter Email . . ."
                     required
                   />
+                  <div id="email-error"></div>
                 </div>
                 <div class="mb-3">
                   <label for="password" class="form-label">Password</label>
@@ -42,6 +43,7 @@
                     placeholder="*****************"
                     required
                   />
+                  <div id="password-error"></div>
                 </div>
                 <div class="mt-4 d-grid">
                   <button class="btn btn-dark py-2">SignUp</button>
@@ -58,5 +60,56 @@
     <!-- Footer -->
     <%- include('./partials/footer.ejs') %>
     <!-- Footer -->
+
+    <!-- JS -->
+    <script>
+      const form = document.querySelector('form');
+      const emailE = document.getElementById('email');
+      const passwordE = document.getElementById('password');
+      const emailError = document.getElementById('email-error');
+      const passwordError = document.getElementById('password-error');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = form.email.value;
+        const password = form.password.value;
+
+        // reset errors
+        emailError.textContent = '';
+        passwordError.textContent = '';
+
+        emailE.classList.remove('is-invalid');
+        passwordE.classList.remove('is-invalid');
+
+        try {
+          const res = await fetch('/signup', {
+            method: 'POST',
+            body: JSON.stringify({ email, password }),
+            headers: { 'Content-Type': 'application/json' },
+          });
+
+          const data = await res.json();
+          console.log(data);
+
+          if (data.user) {
+            location.assign('/');
+          }
+          if (data.errors.email) {
+            emailE.classList.add('is-invalid');
+            emailError.classList.add('invalid-feedback');
+            emailError.textContent = data.errors.email;
+          }
+          if (data.errors.password) {
+            passwordE.classList.add('is-invalid');
+            passwordError.classList.add('invalid-feedback');
+            passwordError.textContent = data.errors.password;
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    </script>
+    <!-- JS -->
   </body>
 </html>
