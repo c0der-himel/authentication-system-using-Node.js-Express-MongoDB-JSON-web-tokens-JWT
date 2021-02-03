@@ -1,11 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
 // middleware
 app.use(morgan('dev'));
+app.use(express.json());
 app.use(express.static('public'));
 
 // view engine
@@ -14,6 +16,7 @@ app.set('view engine', 'ejs');
 // routes
 app.get('/', (req, res) => res.render('home'));
 app.get('/courses', (req, res) => res.render('courses'));
+app.use(authRoutes);
 app.use((req, res) => res.status(404).render('404'));
 
 // server & database connection
