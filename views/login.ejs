@@ -46,7 +46,7 @@
                   <div id="password-error"></div>
                 </div>
                 <div class="mt-4 d-grid">
-                  <button class="btn btn-dark py-2">SignUp</button>
+                  <button class="btn btn-dark py-2">LogIn</button>
                 </div>
               </form>
             </div>
@@ -72,15 +72,14 @@
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const email = form.email.value;
-        const password = form.password.value;
-
         // reset errors
         emailError.textContent = '';
         passwordError.textContent = '';
-
         emailE.classList.remove('is-invalid');
         passwordE.classList.remove('is-invalid');
+
+        const email = form.email.value;
+        const password = form.password.value;
 
         try {
           const res = await fetch('/login', {
@@ -92,18 +91,16 @@
           const data = await res.json();
           console.log(data);
 
-          if (data.user) {
-            location.assign('/');
-          }
-          if (data.errors.email) {
+          if (data.errors) {
             emailE.classList.add('is-invalid');
             emailError.classList.add('invalid-feedback');
             emailError.textContent = data.errors.email;
-          }
-          if (data.errors.password) {
             passwordE.classList.add('is-invalid');
             passwordError.classList.add('invalid-feedback');
             passwordError.textContent = data.errors.password;
+          }
+          if (data.user) {
+            location.assign('/');
           }
         } catch (err) {
           console.log(err);
